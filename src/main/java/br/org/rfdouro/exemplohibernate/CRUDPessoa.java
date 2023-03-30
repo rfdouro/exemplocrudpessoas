@@ -2,7 +2,8 @@ package br.org.rfdouro.exemplohibernate;
 
 import br.org.rfdouro.exemplohibernate.model.Pessoa;
 import br.org.rfdouro.exemplohibernate.model.Tarefa;
-import br.org.rfdouro.exemplohibernate.persistence.HibernateUtil;
+//import br.org.rfdouro.exemplohibernate.persistence.HibernateUtil;
+import br.org.rfdouro.exemplohibernate.persistence.HibernateUtilH2;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 
@@ -17,7 +18,7 @@ import org.hibernate.Session;
 public class CRUDPessoa {
 
  public static void main(String[] args) {
-  Session s = HibernateUtil.getInstance();
+  Session s = HibernateUtilH2.getInstance();
   Scanner sc = new Scanner(System.in);
   int op = 0;
   //menu de execução
@@ -34,7 +35,7 @@ public class CRUDPessoa {
    op = sc.nextInt();
    switch (op) {
     case 1:
-     EntityManager em = HibernateUtil.getInstance(); // recupera um gerenciador de entidades
+     EntityManager em = HibernateUtilH2.getInstance(); // recupera um gerenciador de entidades
      try {
       System.out.println("digite o nome da pessoa");
       String nome = sc.next();
