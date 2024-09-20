@@ -3,19 +3,24 @@ package br.org.rfdouro.exemplohibernate.persistence;
 import br.org.rfdouro.exemplohibernate.model.Endereco;
 import br.org.rfdouro.exemplohibernate.model.Pessoa;
 import br.org.rfdouro.exemplohibernate.model.Tarefa;
+import jakarta.persistence.Entity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
 
 /**
  *
  * @author rfdouro
- * 
- * classe de utilidades para gerar Session Hibernate
- * que são gerenciadores de entidades (EntityManager)
+ *
+ * classe de utilidades para gerar Session Hibernate que são gerenciadores de entidades
+ * (EntityManager)
  */
 public class HibernateUtilH2 {
 
@@ -72,10 +77,11 @@ public class HibernateUtilH2 {
   try {
    //adiciona as classes do modelo para verificação do Hibernate / JPA
    //devem estar indicadas aqui todas as classes do sistema que são entidades
-   Configuration configuration = new Configuration()
-           .addAnnotatedClass(Pessoa.class)
-           .addAnnotatedClass(Tarefa.class)
-           .addAnnotatedClass(Endereco.class);
+   Configuration configuration = new Configuration();
+   Set<Class> classes = getEntityClasses("br.org.rfdouro.exemplohibernate");
+   classes.forEach(c -> {
+    configuration.addAnnotatedClass(c);
+   });
    //indica as propriedades utilizadas
    configuration.setProperties(properties);
    //cria a fábrica de sessões
@@ -95,5 +101,18 @@ public class HibernateUtilH2 {
   session = sessionFactory.openSession();
   threadLocal.set(session);
   return session;
+ }
+
+ /**
+  * método para retornar as classes da aplicação que são marcadas como Entity
+  */
+ public static Set<Class> getEntityClasses(String packageName) {
+  Reflections reflections = new Reflections(packageName, Scanners.SubTypes.filterResultsBy(c -> true));
+  return reflections.getSubTypesOf(Object.class)
+          .stream()
+          .filter(c -> {
+           return c.isAnnotationPresent(Entity.class);
+          })
+          .collect(Collectors.toSet());
  }
 }
