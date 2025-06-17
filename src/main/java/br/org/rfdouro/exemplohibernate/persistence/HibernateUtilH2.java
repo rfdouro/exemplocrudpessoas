@@ -31,7 +31,9 @@ public class HibernateUtilH2 {
  //essa estratégia é comum em arquiteturas com ampla concorrência a recursos
  private static ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
  //url do banco de dados
- private static String urlDB = "jdbc:h2:file:./testdb;AUTO_SERVER=TRUE";
+ //private static String urlDB = "jdbc:h2:file:./testdb;AUTO_SERVER=TRUE";
+ private static String urlDB = "jdbc:h2:file:./testdb;MODE=MYSQL;DATABASE_TO_LOWER=TRUE";
+ 
 
  //execução estática - é executada no momento em que o programa é carregado
  static {
